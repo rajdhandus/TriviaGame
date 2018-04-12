@@ -81,18 +81,24 @@
     },
 
     eventRegistry: function () {
-      this.$options.on("click", this.validateChoice);
+      // app.on("answerChosen", this.validateChoice);
+      // this.$options.on("click", this.validateChoice);
+      // this.$options.on("click", function(){console.log("you clicked options")});
+      this.$options.on("click", function(){app.emit("answerChosen", this)});
+      // this.$options.on("click", app.emit("answerChosen", this));
+      // this.$options.on("click", function(){"someone clicked options"});
       // console.log(JSON.stringify(app.nextQuestionClicked));
       // this.$nextQtnBtn.on("click", this.on("nextQuestion", app.nextQuestionClicked));
       this.$nextQtnBtn.on("click", this.init.bind(this));
       app.on("nextQuestion", this.nextQuestionClicked);
+      app.on("answerChosen", this.validateChoice);
       app.on("timeOverEvent", this.toggleNextBtn);
     },
 
-    validateChoice: function () {
-      console.log(this.id);
+    validateChoice: function (param) {
+      console.log(param);
       console.log(app.correctAnswer);
-      if (this.id === app.correctAnswer) {
+      if (param.id === app.correctAnswer) {
         console.log("correct answer!");
       }
 
@@ -132,6 +138,8 @@
     },
 
     emit: function(typeOfEvent, paramData){
+      console.log("emit called for even type " + typeOfEvent)
+      console.log("paramData was  " + paramData)
       if(this.events[typeOfEvent]) {
         this.events[typeOfEvent].forEach(function(elem){
           elem(paramData);
