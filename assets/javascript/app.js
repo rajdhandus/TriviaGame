@@ -43,6 +43,9 @@
       }
     ],
 
+    correctAnswers : 0,
+    incorrectAnswers : 0,
+
     cacheDom: function () {
       this.$question = $("#questions");
       this.$choice1 = $("#choice-1");
@@ -61,13 +64,14 @@
     },
 
     updateTime: function () {
-      // console.log("updateTime executed " + app.$timeInSeconds.text());
-      let timeLeft = app.$timeInSeconds.text() - 1;
-      if (timeLeft <= 0) {
-        clearInterval(app.timerHook);
-        app.emit("timeOverEvent", true);
-      }
-      app.$timeInSeconds.text(timeLeft);
+      // let timeLeft = app.$timeInSeconds.text() - 1;
+      // if (timeLeft <= 0) {
+      //   clearInterval(app.timerHook);
+      //   events.emit("timeOverEvent", true);
+      // }
+      // app.$timeInSeconds.text(timeLeft);
+
+      clock.startClock();
 
     },
 
@@ -81,18 +85,41 @@
     },
 
     eventRegistry: function () {
-      // app.on("answerChosen", this.validateChoice);
-      // this.$options.on("click", this.validateChoice);
-      // this.$options.on("click", function(){console.log("you clicked options")});
-      this.$options.on("click", function(){app.emit("answerChosen", this)});
-      // this.$options.on("click", app.emit("answerChosen", this));
-      // this.$options.on("click", function(){"someone clicked options"});
-      // console.log(JSON.stringify(app.nextQuestionClicked));
-      // this.$nextQtnBtn.on("click", this.on("nextQuestion", app.nextQuestionClicked));
-      this.$nextQtnBtn.on("click", this.init.bind(this));
-      app.on("nextQuestion", this.nextQuestionClicked);
-      app.on("answerChosen", this.validateChoice);
-      app.on("timeOverEvent", this.toggleNextBtn);
+      this.$options.on("click", this.answerChosen);
+      this.$nextQtnBtn.on("click", this.nextQuestionClicked);
+      events.on("nextQuestion", this.toggleNextBtn);
+      events.on("answerChosen", this.validateChoice);
+      events.on("timeOverEvent", this.toggleNextBtn);
+      events.on("timeOverEvent", this.showCorrectAnswer);
+      events.on("correctAnswerEvent", this.correctAnswerChosen);
+      events.on("incorrectAnswerEvent", this.incorrectAnswerChosen);
+    },
+
+    showCorrectAnswer : function() {
+      app.$question.text("Correct Answer is...");
+      console.log(app.correctAnswer);
+      var tmp = "#" + app.correctAnswer;
+      $(tmp).attr("style", "color:red;");
+    },
+
+    answerChosen : function(){
+      console.log(events);
+      events.emit("answerChosen", this);
+      clock.pauseClock();
+    },
+
+    correctAnswerChosen : function() {
+      app.$question.text("Correct Answer!");
+      app.$options.text("");
+      clearInterval(app.timerHook);
+      setTimeout(app.toggleNextBtn(true), 2000);
+    },
+
+    incorrectAnswerChosen : function() {
+      app.$question.text("Wrong Answer!");
+      app.$options.text("");
+      clearInterval(app.timerHook);
+      setTimeout(app.toggleNextBtn(true), 2000);
     },
 
     validateChoice: function (param) {
@@ -100,15 +127,16 @@
       console.log(app.correctAnswer);
       if (param.id === app.correctAnswer) {
         console.log("correct answer!");
+        events.emit("correctAnswerEvent");
+      } else {
+        events.emit("incorrectAnswerEvent");
       }
-
     },
 
     init: function () {
-      console.log("init function called");
-      var qObj = this.getRandomQA();
-      this.render(qObj);
-      console.log(this.nextQuestionClicked);
+      var qObj = app.getRandomQA();
+      app.render(qObj);
+      clock.reset();
     },
 
     main: function () {
@@ -119,6 +147,7 @@
     },
 
     toggleNextBtn : function(enable) {
+      setTimeout(app.init,3000);
       console.log("toggleNextBtn called with " + enable);
       if(!enable) {
         app.$nextQtnBtn.attr("disabled", "disabled");
@@ -126,30 +155,10 @@
         app.$nextQtnBtn.removeAttr("disabled");
       }
     },
-  
-    events : {},
-  
-    on: function(typeOfEvent, eventCallBack){
-      console.log("on function : " + eventCallBack);
-      this.events[typeOfEvent] = this.events[typeOfEvent] || [];
-      this.events[typeOfEvent].push(eventCallBack);
-      console.log(this.events[typeOfEvent]);
-      console.log("event subscription detected");
-    },
-
-    emit: function(typeOfEvent, paramData){
-      console.log("emit called for even type " + typeOfEvent)
-      console.log("paramData was  " + paramData)
-      if(this.events[typeOfEvent]) {
-        this.events[typeOfEvent].forEach(function(elem){
-          elem(paramData);
-        });
-      }
-    },
 
     nextQuestionClicked : function() {
       console.log("event happened");
-      app.emit("nextQuestion");
+      events.emit("nextQuestion");
     }
   };
 
