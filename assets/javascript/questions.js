@@ -105,9 +105,10 @@ var questions = (function () {
     };
 
     var validateAnswer = function (clickedElem) {
-        
+        console.log("validateAnswer was called with - " + clickedElem);
         if (!isGameOver && !currentQstnAnswrd) {
             clock.pauseClock();
+            console.log($(this));
             if ($(this).attr("id") === currentCorrectAnswer) {
                 renderSuccess();
                 clock.pauseClock();

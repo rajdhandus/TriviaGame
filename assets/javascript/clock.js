@@ -5,7 +5,7 @@ var clock = (function () {
     var isClockRunning = false;
 
     var reset = function(){
-        $timeComponent.text(6);
+        $timeComponent.text(10);
         isClockRunning = false;
     };
 
@@ -16,7 +16,7 @@ var clock = (function () {
             console.log("i am still running with handle of " + isClockRunning);
             events.emit("timeUp", true);
             clearInterval(isClockRunning);
-            setTimeout(questions.renderNext,1000);
+            setTimeout(questions.renderNext,1500);
         }
         $timeComponent.text(timeRemaining - 1);
     };
