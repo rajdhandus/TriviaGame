@@ -4,3 +4,8 @@ h1 {
     font-size: 32px;
     padding: 24px;
 }
+
+.options:hover {
+    background-color: gray;
+    color: white;
+}

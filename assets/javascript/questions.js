@@ -37,11 +37,8 @@ var questions = (function () {
 
     var wins = 0;
     var losses = 0;
-
     var questionIndex = 0;
-
     var isGameOver = false;
-
     var currentQstnAnswrd = false;
 
     var $question = $("#questions");
@@ -51,6 +48,8 @@ var questions = (function () {
     var $choice4 = $("#choice-4");
     var $correctAnswerPlace = $("#correctAnswerPlace");
     var $time = $("#time-remaining");
+    var $timeText = $("#time-remaining");
+    var $timeUnits = $("#time-units");
 
     var currentCorrectAnswer;
 
@@ -59,11 +58,13 @@ var questions = (function () {
         $correctAnswerPlace.empty();
         if (questionIndex < questions.length) {
             var currentQuestion = questions[questionIndex];
+            $timeText.text("Time Remaining: ");
+            $timeUnits.text("Seconds");
             $question.text(currentQuestion.question);
-            $choice1.text(currentQuestion.choice1);
-            $choice2.text(currentQuestion.choice2);
-            $choice3.text(currentQuestion.choice3);
-            $choice4.text(currentQuestion.choice4);
+            $choice1.text(currentQuestion.choice1).addClass("options");
+            $choice2.text(currentQuestion.choice2).addClass("options");
+            $choice3.text(currentQuestion.choice3).addClass("options");
+            $choice4.text(currentQuestion.choice4).addClass("options");
             currentCorrectAnswer = currentQuestion.correctAnswer;
             clock.reset();
             clock.startClock();
@@ -115,6 +116,9 @@ var questions = (function () {
             }
             currentQstnAnswrd = true;
             setTimeout(renderNext, 3000);
+        }
+        else {
+            console.log("click happened when game was over or during breaks between questions");
         }
     }
 

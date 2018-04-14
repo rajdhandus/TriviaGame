@@ -16,7 +16,7 @@ var clock = (function () {
             console.log("i am still running with handle of " + isClockRunning);
             events.emit("timeUp", true);
             clearInterval(isClockRunning);
-            setTimeout(questions.renderNext,2000);
+            setTimeout(questions.renderNext,1000);
         }
         $timeComponent.text(timeRemaining - 1);
     };
