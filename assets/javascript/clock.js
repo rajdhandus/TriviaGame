@@ -2,54 +2,46 @@ var clock = (function () {
 
     var $timeComponent = $("#timeInSeconds");
 
-    var clockHandle;
+    var isClockRunning = false;
 
     var reset = function(){
-        clockHandle = undefined;
-        $timeComponent.text(30);
-        startClock();
+        $timeComponent.text(6);
+        isClockRunning = false;
+    };
+
+    var reduceTime = function () {
+        var timeRemaining = parseInt($timeComponent.text());
+        if(timeRemaining<=1) {
+            pauseClock();
+            console.log("i am still running with handle of " + isClockRunning);
+            events.emit("timeUp", true);
+            clearInterval(isClockRunning);
+            setTimeout(questions.renderNext,2000);
+        }
+        $timeComponent.text(timeRemaining - 1);
     };
 
     var startClock = function () {
-        console.log("startClock called " + $timeComponent.text() + " clockHandle - "+clockHandle);
+        console.log("startClock called " + $timeComponent.text() + " isClockRunning - "+isClockRunning);
 
-        if (clockHandle === undefined) {
+        if (isClockRunning === false) {
             console.log("startClock called " + $timeComponent.text());
-            clockHandle = setInterval(function () {
-                var timeRemaining = parseInt($timeComponent.text());
-                if(timeRemaining===1) {
-                    pauseClock();
-                }
-                console.log("startClock " + timeRemaining);
-                $timeComponent.text(timeRemaining - 1);
-            }, 1000);
+            isClockRunning = setInterval(reduceTime, 1000);
         } else {
-
             console.log("clock is already running ");
         }
     };
 
     var pauseClock = function () {
-
-        if (clockHandle != undefined) {
-            console.log("pause Clock called " + clockHandle.toString());
-            clearInterval(clockHandle);
-            clockHandle = undefined;
-        } else {
-            console.log("clock handle is undefined so cannot be cancelled ");
-        }
+            console.log("pause Clock called " + isClockRunning);
+            clearInterval(isClockRunning);
+            isClockRunning = false;
     };
 
     var stopClock = function () {
-
-        if (clockHandle != undefined) {
-            console.log("stopClock called " + clockHandle.toString());
-            pauseClock(clockHandle);
-            initializeClock();
-
-        } else {
-            console.log("clock is already running ");
-        }
+            console.log("stopClock called " + isClockRunning.toString());
+            pauseClock(isClockRunning);
+            reset();
     };
 
     return {

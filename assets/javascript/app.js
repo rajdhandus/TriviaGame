@@ -1,48 +1,6 @@
 (function () {
   var app = {
-    questions: [
-      {
-        question: "What is your favorite color?",
-        choice1: "red",
-        choice2: "blue",
-        choice3: "green",
-        choice4: "yello",
-        correctAnswer: "choice-1"
-      },
-      {
-        question: "What is your favorite game?",
-        choice1: "baseball",
-        choice2: "football",
-        choice3: "soccer",
-        choice4: "cricket",
-        correctAnswer: "choice-1"
-      },
-      {
-        question: "What is your favorite food?",
-        choice1: "noodles",
-        choice2: "fried chicken",
-        choice3: "grits and shrimp",
-        choice4: "burger",
-        correctAnswer: "choice-1"
-      },
-      {
-        question: "What is your favorite dog?",
-        choice1: "dalmation",
-        choice2: "poodle",
-        choice3: "soccer",
-        choice4: "cricket",
-        correctAnswer: "choice-1"
-      },
-      {
-        question: "What is your favorite vehicle?",
-        choice1: "honda",
-        choice2: "nissan",
-        choice3: "volkswagen",
-        choice4: "audi",
-        correctAnswer: "choice-1"
-      }
-    ],
-
+ 
     correctAnswers : 0,
     incorrectAnswers : 0,
 
@@ -57,24 +15,6 @@
       this.$timeInSeconds = $("#timeInSeconds");
     },
 
-    getRandomQA: function () {
-      var randNum = Math.floor(Math.random() * this.questions.length);
-      console.log("random number generated");
-      return this.questions[randNum];
-    },
-
-    updateTime: function () {
-      // let timeLeft = app.$timeInSeconds.text() - 1;
-      // if (timeLeft <= 0) {
-      //   clearInterval(app.timerHook);
-      //   events.emit("timeOverEvent", true);
-      // }
-      // app.$timeInSeconds.text(timeLeft);
-
-      clock.startClock();
-
-    },
-
     render: function (obj) {
       this.$question.text(obj.question);
       this.$choice1.text(obj.choice1);
@@ -85,7 +25,7 @@
     },
 
     eventRegistry: function () {
-      this.$options.on("click", this.answerChosen);
+      this.$options.on("click", questions.validateAnswer);
       this.$nextQtnBtn.on("click", this.nextQuestionClicked);
       events.on("nextQuestion", this.toggleNextBtn);
       events.on("answerChosen", this.validateChoice);
@@ -93,6 +33,8 @@
       events.on("timeOverEvent", this.showCorrectAnswer);
       events.on("correctAnswerEvent", this.correctAnswerChosen);
       events.on("incorrectAnswerEvent", this.incorrectAnswerChosen);
+      events.on("timeUp", questions.renderFailure);
+
     },
 
     showCorrectAnswer : function() {
@@ -134,16 +76,13 @@
     },
 
     init: function () {
-      var qObj = app.getRandomQA();
-      app.render(qObj);
-      clock.reset();
+      questions.renderNext();
     },
 
     main: function () {
       this.cacheDom();
       this.init();
       this.eventRegistry();
-      this.timerHook = setInterval(this.updateTime, 1000);
     },
 
     toggleNextBtn : function(enable) {

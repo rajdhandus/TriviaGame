@@ -3,7 +3,7 @@ var events = (function(){
     var events  = {};
   
     var on = function(typeOfEvent, eventCallBack){
-        // console.log("event on called : " + typeOfEvent + " - " + events + " - " + eventCallBack);
+        console.log("event on called : " + typeOfEvent + " - " + events + " - " + eventCallBack);
         events[typeOfEvent] = events[typeOfEvent] || [];
         events[typeOfEvent].push(eventCallBack);
     };
@@ -13,6 +13,8 @@ var events = (function(){
       console.log("paramData was  " + paramData)
       if(events[typeOfEvent]) {
         events[typeOfEvent].forEach(function(elem){
+          console.log(typeof elem);
+          console.log(JSON.stringify(elem));
           elem(paramData);
         });
       }
