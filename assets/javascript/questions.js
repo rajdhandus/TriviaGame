@@ -53,18 +53,28 @@ var questions = (function () {
 
     var currentCorrectAnswer;
 
+    var toggleClickable = function() {
+            $choice1.toggleClass("options");
+            $choice2.toggleClass("options");
+            $choice3.toggleClass("options");
+            $choice4.toggleClass("options");
+    };
+
     var renderNext = function () {
         currentQstnAnswrd = false;
         $correctAnswerPlace.empty();
         if (questionIndex < questions.length) {
+            if(questionIndex==0) {
+                toggleClickable();
+            }
             var currentQuestion = questions[questionIndex];
+            $choice1.text(currentQuestion.choice1);
+            $choice2.text(currentQuestion.choice2);
+            $choice3.text(currentQuestion.choice3);
+            $choice4.text(currentQuestion.choice4);
             $timeText.text("Time Remaining: ");
             $timeUnits.text("Seconds");
             $question.text(currentQuestion.question);
-            $choice1.text(currentQuestion.choice1).addClass("options");
-            $choice2.text(currentQuestion.choice2).addClass("options");
-            $choice3.text(currentQuestion.choice3).addClass("options");
-            $choice4.text(currentQuestion.choice4).addClass("options");
             currentCorrectAnswer = currentQuestion.correctAnswer;
             clock.reset();
             clock.startClock();
@@ -76,6 +86,7 @@ var questions = (function () {
     };
 
     var gameOver = function () {
+        toggleClickable();
         $question.text("Game Over!");
         $choice1.text("Correct Answers : " + wins);
         $choice2.text("Wrong Answers : " + losses);

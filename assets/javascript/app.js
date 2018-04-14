@@ -18,11 +18,10 @@
       events.on("timeUp", questions.renderFailure);
     },
 
-    answerChosen : function(){
-      console.log(events);
-      events.emit("answerChosen", this);
-      clock.pauseClock();
-    },
+    // answerChosen : function(){
+    //   events.emit("answerChosen", this);
+    //   clock.pauseClock();
+    // },
 
 
     main: function () {
