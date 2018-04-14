@@ -53,20 +53,26 @@ var questions = (function () {
 
     var currentCorrectAnswer;
 
-    var toggleClickable = function() {
-            $choice1.toggleClass("options");
-            $choice2.toggleClass("options");
-            $choice3.toggleClass("options");
-            $choice4.toggleClass("options");
+    var toggleClickable = function (exceptOne) {
+        $choice1.toggleClass("options");
+        $choice2.toggleClass("options");
+        $choice3.toggleClass("options");
+        $choice4.toggleClass("options");
+    };
+
+    var clearPreviousAns = function () {
+        $choice1.removeClass("answer");
+        $choice2.removeClass("answer");
+        $choice3.removeClass("answer");
+        $choice4.removeClass("answer");
     };
 
     var renderNext = function () {
         currentQstnAnswrd = false;
         $correctAnswerPlace.empty();
         if (questionIndex < questions.length) {
-            if(questionIndex==0) {
-                toggleClickable();
-            }
+            clearPreviousAns();
+            toggleClickable();
             var currentQuestion = questions[questionIndex];
             $choice1.text(currentQuestion.choice1);
             $choice2.text(currentQuestion.choice2);
@@ -86,7 +92,7 @@ var questions = (function () {
     };
 
     var gameOver = function () {
-        toggleClickable();
+        clearPreviousAns();
         $question.text("Game Over!");
         $choice1.text("Correct Answers : " + wins);
         $choice2.text("Wrong Answers : " + losses);
@@ -97,18 +103,20 @@ var questions = (function () {
         isGameOver = true;
     }
 
-    var renderSuccess = function () {
+    var renderSuccess = function ($answer) {
         if (!isGameOver) {
             wins++;
+            $answer.addClass("answer");
             $correctAnswerPlace.html("<h1 style=\"color:green;\">Correct Answer!!<h1>");
         }
     };
 
-    var renderFailure = function (timeOut) {
+    var renderFailure = function (timeOut, $answer) {
         if (!isGameOver) {
             if (timeOut) {
                 $correctAnswerPlace.html("<h1 style=\"color:red;\">Time Up.....</h1>");
             } else {
+                $answer.addClass("answer");
                 $correctAnswerPlace.html("<h1 style=\"color:red;\">Wrong Answer.....</h1>");
             }
             losses++;
@@ -116,21 +124,20 @@ var questions = (function () {
     };
 
     var validateAnswer = function (clickedElem) {
-        console.log("validateAnswer was called with - " + clickedElem);
         if (!isGameOver && !currentQstnAnswrd) {
+            var $answerChosen = $(this);
             clock.pauseClock();
-            console.log($(this));
-            if ($(this).attr("id") === currentCorrectAnswer) {
-                renderSuccess();
+            toggleClickable();
+            if ($answerChosen.attr("id") === currentCorrectAnswer) {
+                renderSuccess($answerChosen);
                 clock.pauseClock();
             } else {
-                renderFailure();
+                renderFailure(false, $answerChosen);
             }
             currentQstnAnswrd = true;
             setTimeout(renderNext, 3000);
         }
         else {
-            console.log("click happened when game was over or during breaks between questions");
         }
     }
 

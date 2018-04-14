@@ -13,7 +13,6 @@ var clock = (function () {
         var timeRemaining = parseInt($timeComponent.text());
         if(timeRemaining<=1) {
             pauseClock();
-            console.log("i am still running with handle of " + isClockRunning);
             events.emit("timeUp", true);
             clearInterval(isClockRunning);
             setTimeout(questions.renderNext,1500);
@@ -22,24 +21,19 @@ var clock = (function () {
     };
 
     var startClock = function () {
-        console.log("startClock called " + $timeComponent.text() + " isClockRunning - "+isClockRunning);
 
         if (isClockRunning === false) {
-            console.log("startClock called " + $timeComponent.text());
             isClockRunning = setInterval(reduceTime, 1000);
         } else {
-            console.log("clock is already running ");
         }
     };
 
     var pauseClock = function () {
-            console.log("pause Clock called " + isClockRunning);
             clearInterval(isClockRunning);
             isClockRunning = false;
     };
 
     var stopClock = function () {
-            console.log("stopClock called " + isClockRunning.toString());
             pauseClock(isClockRunning);
             reset();
     };
