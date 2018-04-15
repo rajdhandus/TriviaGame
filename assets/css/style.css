@@ -3,14 +3,22 @@ h1 {
     font-family: 'Poppins', sans-serif;
     font-size: 32px;
     padding: 24px;
+    color: white;
 }
 
 .options:hover {
     background-color: gray;
-    color: white;
+    color: black;
 }
 
 .answer {
     background-color: gray;
     color: white;
 }
+
+body {
+    background-image: url("../images/wes-hicks-418451-unsplash.jpg");
+    background-color: #cccccc;
+    background-repeat: no-repeat;
+    background-size: cover;
+ }

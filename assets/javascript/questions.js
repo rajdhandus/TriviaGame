@@ -1,46 +1,56 @@
 var questions = (function () {
 
-    var questions = [
-        {
-            question: "How many red stripes are there on the United States flag?",
-            choice1: "Five",
-            choice2: "Six",
-            choice3: "Seven",
-            choice4: "Eight",
-            correctAnswer: "Seven"
-        },
-        {
-            question: "What is the largest rodent found in North America?",
-            choice1: "Beaver",
-            choice2: "Fox squirrel",
-            choice3: "Gopher",
-            choice4: "Muskrat",
-            correctAnswer: "Beaver"
-        },
-        {
-            question: "What was Walt Disney's middle name?",
-            choice1: "Timothy",
-            choice2: "Allen",
-            choice3: "Herbert",
-            choice4: "Elias",
-            correctAnswer: "Elias"
-        },
-        {
-            question: "Which U.S. President made the first telephone call to the moon?",
-            choice1: "Richard Nixon",
-            choice2: "John F Kennedy",
-            choice3: "Lyndon B Johnson",
-            choice4: "Ronald Reagen",
-            correctAnswer: "Richard Nixon"
-        }];
+    var questions = [];
 
 
-    // $.ajax({
-    //     url: "https://opentdb.com/api.php?amount=10&category=28&difficulty=easy&type=multiple",
-    //     method: "GET"
-    // }).then(function (response) {
-    //     console.log(response);
-    // });
+    $.ajax({
+        url: "https://opentdb.com/api.php?amount=10&category=28&difficulty=easy&type=multiple",
+        method: "GET"
+    }).then(function (response) {
+        // console.log(response);
+        var questionArr = response.results;
+        // questionArr = JSON.parse(questionArr);
+
+        questionArr.forEach(function (elem) {
+            var query = {};
+            query.question = unescape(elem.question);
+            query.correctAnswer = elem.correct_answer;
+            var ansArr = elem.incorrect_answers;
+            // console.log(elem);
+            ansArr.push(elem.correct_answer);
+            ansArr = shuffleArray(ansArr);
+
+            // console.log(ansArr);
+            for(var i=0; i<ansArr.length;i++) {
+                var choice = "choice" + (i+1);
+                query[choice] = ansArr[i];
+            }
+
+            // console.log(query);
+
+            questions.push(query);
+        });
+    });
+
+    var shuffleArray = function (array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    };
+
 
 
     var wins = 0;
@@ -58,6 +68,7 @@ var questions = (function () {
     var $correctAnswerPlace = $("#correctAnswerPlace");
     var $time = $("#time-remaining");
     var $timeText = $("#time-remaining");
+    var $timeInSeconds = $("#timeInSeconds");
     var $timeUnits = $("#time-units");
 
     var currentCorrectAnswer;
@@ -92,7 +103,7 @@ var questions = (function () {
             $choice4.text(currentQuestion.choice4);
             $timeText.text("Time Remaining: ");
             $timeUnits.text("Seconds");
-            $question.attr("style", "").text(currentQuestion.question);
+            $question.attr("style", "").html(currentQuestion.question);
             currentCorrectAnswer = currentQuestion.correctAnswer;
             clock.reset();
             clock.startClock();
@@ -108,6 +119,12 @@ var questions = (function () {
         $question.attr("style", "").text("Game Over!");
         $choice1.text("Correct Answers : " + wins);
         $choice2.text("Wrong Answers : " + losses);
+        $timeUnits.text("");
+        $time.text("");
+        $timeInSeconds.text("");
+
+        $choice2.text("Wrong Answers : " + losses);
+
         $choice3.empty();
         $choice4.empty();
         clock.stopClock();
@@ -117,7 +134,7 @@ var questions = (function () {
 
         $correctAnswerPlace.append("<button id=\"startOverBtn\" class=\"btn btn-lg btn-danger\">Start Over</button>");
 
-        $correctAnswerPlace.on("click", function(){
+        $correctAnswerPlace.on("click", function () {
             console.log("hello there!");
             // toggleClickable();
             wins = 0;
