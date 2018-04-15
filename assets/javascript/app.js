@@ -11,9 +11,10 @@
 
 // [*] bug - clicks are allowed with start game screen
 // [*] feature - gif between questions
-// * feature - start over
+// [*] feature - start over
 // * feature - dynamic questions
 // * markdown document
+// * UI background etc
 
     eventRegistry: function () {
       this.$clickable.on("click", questions.validateAnswer);

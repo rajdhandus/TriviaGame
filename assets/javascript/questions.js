@@ -77,6 +77,8 @@ var questions = (function () {
     };
 
     var renderNext = function () {
+
+        $correctAnswerPlace.off("click");
         currentQstnAnswrd = false;
         gameStarted = true;
         $correctAnswerPlace.empty();
@@ -112,6 +114,24 @@ var questions = (function () {
         $time.empty();
         isGameOver = true;
         gameStarted = false;
+
+        $correctAnswerPlace.append("<button id=\"startOverBtn\" class=\"btn btn-lg btn-danger\">Start Over</button>");
+
+        $correctAnswerPlace.on("click", function(){
+            console.log("hello there!");
+            // toggleClickable();
+            wins = 0;
+            losses = 0;
+            questionIndex = 0;
+            isGameOver = false;
+            currentQstnAnswrd = false;
+            gameStarted = false;
+            clock.pauseClock();
+            clock.reset()
+            // clock.stopClock();
+            renderNext();
+            // app.main();
+        });
     }
 
     var renderSuccess = function ($answer) {
@@ -201,7 +221,7 @@ var questions = (function () {
             toggleClickable();
             if ($answerChosen.text() === currentCorrectAnswer) {
                 renderSuccess($answerChosen);
-                clock.pauseClock();
+                // clock.pauseClock();
             } else {
                 renderFailure(false);
             }

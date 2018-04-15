@@ -12,6 +12,7 @@ var clock = (function () {
     var reduceTime = function () {
         var timeRemaining = parseInt($timeComponent.text());
         if(timeRemaining<=1) {
+            console.log("clock running ");
             pauseClock();
             events.emit("timeUp", true);
             clearInterval(isClockRunning);
