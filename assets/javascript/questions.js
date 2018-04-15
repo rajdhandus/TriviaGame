@@ -7,7 +7,7 @@ var questions = (function () {
             choice2: "Six",
             choice3: "Seven",
             choice4: "Eight",
-            correctAnswer: "choice-3"
+            correctAnswer: "Seven"
         },
         {
             question: "What is the largest rodent found in North America?",
@@ -15,7 +15,7 @@ var questions = (function () {
             choice2: "Fox squirrel",
             choice3: "Gopher",
             choice4: "Muskrat",
-            correctAnswer: "choice-1"
+            correctAnswer: "Beaver"
         },
         {
             question: "What was Walt Disney's middle name?",
@@ -23,7 +23,7 @@ var questions = (function () {
             choice2: "Allen",
             choice3: "Herbert",
             choice4: "Elias",
-            correctAnswer: "choice-4"
+            correctAnswer: "Elias"
         },
         {
             question: "Which U.S. President made the first telephone call to the moon?",
@@ -31,7 +31,7 @@ var questions = (function () {
             choice2: "John F Kennedy",
             choice3: "Lyndon B Johnson",
             choice4: "Ronald Reagen",
-            correctAnswer: "choice-1"
+            correctAnswer: "Richard Nixon"
         }];
 
 
@@ -40,6 +40,7 @@ var questions = (function () {
     var questionIndex = 0;
     var isGameOver = false;
     var currentQstnAnswrd = false;
+    var gameStarted = false;
 
     var $question = $("#questions");
     var $choice1 = $("#choice-1");
@@ -69,6 +70,7 @@ var questions = (function () {
 
     var renderNext = function () {
         currentQstnAnswrd = false;
+        gameStarted = true;
         $correctAnswerPlace.empty();
         if (questionIndex < questions.length) {
             clearPreviousAns();
@@ -80,7 +82,7 @@ var questions = (function () {
             $choice4.text(currentQuestion.choice4);
             $timeText.text("Time Remaining: ");
             $timeUnits.text("Seconds");
-            $question.text(currentQuestion.question);
+            $question.attr("style","").text(currentQuestion.question);
             currentCorrectAnswer = currentQuestion.correctAnswer;
             clock.reset();
             clock.startClock();
@@ -93,7 +95,7 @@ var questions = (function () {
 
     var gameOver = function () {
         clearPreviousAns();
-        $question.text("Game Over!");
+        $question.attr("style", "").text("Game Over!");
         $choice1.text("Correct Answers : " + wins);
         $choice2.text("Wrong Answers : " + losses);
         $choice3.empty();
@@ -101,49 +103,112 @@ var questions = (function () {
         clock.stopClock();
         $time.empty();
         isGameOver = true;
+        gameStarted = false;
     }
 
     var renderSuccess = function ($answer) {
         if (!isGameOver) {
             wins++;
-            $answer.addClass("answer");
-            $correctAnswerPlace.html("<h1 style=\"color:green;\">Correct Answer!!<h1>");
+
+            $.ajax({
+                url : "http://api.giphy.com/v1/gifs/search?q=success&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
+                method : "GET"
+            }).then(function(response){
+                console.log(response.data[0].images.downsized_medium.url);
+                var index = generateRandNum(10);
+                $correctAnswerPlace.html("<img src="+ response.data[index].images.downsized_medium.url +" alt=\"success\">");
+            });
+
+            // $answer.addClass("answer");
+            $question.text("Correct Answer!!").attr("style","color:green")
+            $choice1.text("");
+            $choice2.text("");
+            $choice3.text("");
+            $choice4.text("");
+
+
         }
     };
 
-    var renderFailure = function (timeOut, $answer) {
+    var generateRandNum = function(range){
+        // return 0;
+        return Math.floor(Math.random() * range);
+    };
+
+    var renderFailure = function (timeOut) {
         if (!isGameOver) {
             if (timeOut) {
-                $correctAnswerPlace.html("<h1 style=\"color:red;\">Time Up.....</h1>");
+                // $correctAnswerPlace.html("<h1 style=\"color:red;\">Time Up.....</h1>");
+
+                $.ajax({
+                    url : "http://api.giphy.com/v1/gifs/search?q=time+up&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
+                    method : "GET"
+                }).then(function(response){
+                    console.log(response);
+                    var index = generateRandNum(10);
+                    console.log(index);
+                    console.log(response.data[index].images.downsized_medium.url);
+                    $correctAnswerPlace.html("<img src="+ response.data[index].images.downsized_medium.url +" alt=\"wrong\">");
+                });
+    
+                // $answer.addClass("answer");
+                $question.text("Time Up.....").attr("style","color:red");
+                $choice1.text("The Correct Answer was: " + currentCorrectAnswer);
+                $choice2.text("");
+                $choice3.text("");
+                $choice4.text("");
+
             } else {
-                $answer.addClass("answer");
-                $correctAnswerPlace.html("<h1 style=\"color:red;\">Wrong Answer.....</h1>");
+                // $answer.addClass("answer");
+                // $correctAnswerPlace.html("<h1 style=\"color:red;\">Wrong Answer.....</h1>");
+
+
+                $.ajax({
+                    url : "http://api.giphy.com/v1/gifs/search?q=wrong&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
+                    method : "GET"
+                }).then(function(response){
+                    console.log(response.data[0].images.downsized_medium.url);
+                    var index = generateRandNum(10);
+                    $correctAnswerPlace.html("<img src="+ response.data[index].images.downsized_medium.url +" alt=\"wrong\">");
+                });
+    
+                // $answer.addClass("answer");
+                $question.text("Wrong Answer.....").attr("style","color:red");
+                $choice1.text("The Correct Answer was: " + currentCorrectAnswer);
+                $choice2.text("");
+                $choice3.text("");
+                $choice4.text("");
+
+
             }
             losses++;
         }
     };
 
-    var validateAnswer = function (clickedElem) {
-        if (!isGameOver && !currentQstnAnswrd) {
+    var validateAnswer = function () {
+        
+        if (gameStarted && !isGameOver && !currentQstnAnswrd) {
             var $answerChosen = $(this);
             clock.pauseClock();
             toggleClickable();
-            if ($answerChosen.attr("id") === currentCorrectAnswer) {
+            if ($answerChosen.text() === currentCorrectAnswer) {
                 renderSuccess($answerChosen);
                 clock.pauseClock();
             } else {
-                renderFailure(false, $answerChosen);
+                renderFailure(false);
             }
             currentQstnAnswrd = true;
-            setTimeout(renderNext, 3000);
+            setTimeout(renderNext, 5000);
         }
         else {
+
         }
     }
 
 
     return {
         renderNext: renderNext,
+        toggleClickable : toggleClickable,
         renderFailure: renderFailure,
         renderSuccess: renderSuccess,
         validateAnswer: validateAnswer

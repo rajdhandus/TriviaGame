@@ -8,14 +8,12 @@
       this.$clickable = $(".clickable");
 
     },
-// * but - clicks are allowed with start game screen
-// * feature - gif between questions
+
+// [*] bug - clicks are allowed with start game screen
+// [*] feature - gif between questions
 // * feature - start over
 // * feature - dynamic questions
-// 
-// 
-// 
-//     
+
     eventRegistry: function () {
       this.$clickable.on("click", questions.validateAnswer);
       this.$newGameBtnAsChild.on("click", function(e) {e.stopPropagation();});
@@ -25,6 +23,7 @@
 
     main: function () {
       this.cacheDom();
+      questions.toggleClickable();
       this.eventRegistry();
     },
 

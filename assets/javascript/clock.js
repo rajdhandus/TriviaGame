@@ -15,7 +15,8 @@ var clock = (function () {
             pauseClock();
             events.emit("timeUp", true);
             clearInterval(isClockRunning);
-            setTimeout(questions.renderNext,1500);
+            questions.toggleClickable();
+            setTimeout(questions.renderNext,5000);
         }
         $timeComponent.text(timeRemaining - 1);
     };
