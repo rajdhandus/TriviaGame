@@ -13,6 +13,7 @@
 // [*] feature - gif between questions
 // * feature - start over
 // * feature - dynamic questions
+// * markdown document
 
     eventRegistry: function () {
       this.$clickable.on("click", questions.validateAnswer);

@@ -35,6 +35,14 @@ var questions = (function () {
         }];
 
 
+    // $.ajax({
+    //     url: "https://opentdb.com/api.php?amount=10&category=28&difficulty=easy&type=multiple",
+    //     method: "GET"
+    // }).then(function (response) {
+    //     console.log(response);
+    // });
+
+
     var wins = 0;
     var losses = 0;
     var questionIndex = 0;
@@ -82,7 +90,7 @@ var questions = (function () {
             $choice4.text(currentQuestion.choice4);
             $timeText.text("Time Remaining: ");
             $timeUnits.text("Seconds");
-            $question.attr("style","").text(currentQuestion.question);
+            $question.attr("style", "").text(currentQuestion.question);
             currentCorrectAnswer = currentQuestion.correctAnswer;
             clock.reset();
             clock.startClock();
@@ -111,16 +119,16 @@ var questions = (function () {
             wins++;
 
             $.ajax({
-                url : "http://api.giphy.com/v1/gifs/search?q=success&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
-                method : "GET"
-            }).then(function(response){
+                url: "https://api.giphy.com/v1/gifs/search?q=success&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
+                method: "GET"
+            }).then(function (response) {
                 console.log(response.data[0].images.downsized_medium.url);
                 var index = generateRandNum(10);
-                $correctAnswerPlace.html("<img src="+ response.data[index].images.downsized_medium.url +" alt=\"success\">");
+                $correctAnswerPlace.html("<img src=" + response.data[index].images.downsized_medium.url + " alt=\"success\">");
             });
 
             // $answer.addClass("answer");
-            $question.text("Correct Answer!!").attr("style","color:green")
+            $question.text("Correct Answer!!").attr("style", "color:green")
             $choice1.text("");
             $choice2.text("");
             $choice3.text("");
@@ -130,7 +138,7 @@ var questions = (function () {
         }
     };
 
-    var generateRandNum = function(range){
+    var generateRandNum = function (range) {
         // return 0;
         return Math.floor(Math.random() * range);
     };
@@ -141,18 +149,18 @@ var questions = (function () {
                 // $correctAnswerPlace.html("<h1 style=\"color:red;\">Time Up.....</h1>");
 
                 $.ajax({
-                    url : "http://api.giphy.com/v1/gifs/search?q=time+up&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
-                    method : "GET"
-                }).then(function(response){
+                    url: "https://api.giphy.com/v1/gifs/search?q=time+up&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
+                    method: "GET"
+                }).then(function (response) {
                     console.log(response);
                     var index = generateRandNum(10);
                     console.log(index);
                     console.log(response.data[index].images.downsized_medium.url);
-                    $correctAnswerPlace.html("<img src="+ response.data[index].images.downsized_medium.url +" alt=\"wrong\">");
+                    $correctAnswerPlace.html("<img src=" + response.data[index].images.downsized_medium.url + " alt=\"wrong\">");
                 });
-    
+
                 // $answer.addClass("answer");
-                $question.text("Time Up.....").attr("style","color:red");
+                $question.text("Time Up.....").attr("style", "color:red");
                 $choice1.text("The Correct Answer was: " + currentCorrectAnswer);
                 $choice2.text("");
                 $choice3.text("");
@@ -164,16 +172,16 @@ var questions = (function () {
 
 
                 $.ajax({
-                    url : "http://api.giphy.com/v1/gifs/search?q=wrong&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
-                    method : "GET"
-                }).then(function(response){
+                    url: "https://api.giphy.com/v1/gifs/search?q=wrong&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
+                    method: "GET"
+                }).then(function (response) {
                     console.log(response.data[0].images.downsized_medium.url);
                     var index = generateRandNum(10);
-                    $correctAnswerPlace.html("<img src="+ response.data[index].images.downsized_medium.url +" alt=\"wrong\">");
+                    $correctAnswerPlace.html("<img src=" + response.data[index].images.downsized_medium.url + " alt=\"wrong\">");
                 });
-    
+
                 // $answer.addClass("answer");
-                $question.text("Wrong Answer.....").attr("style","color:red");
+                $question.text("Wrong Answer.....").attr("style", "color:red");
                 $choice1.text("The Correct Answer was: " + currentCorrectAnswer);
                 $choice2.text("");
                 $choice3.text("");
@@ -186,7 +194,7 @@ var questions = (function () {
     };
 
     var validateAnswer = function () {
-        
+
         if (gameStarted && !isGameOver && !currentQstnAnswrd) {
             var $answerChosen = $(this);
             clock.pauseClock();
@@ -208,7 +216,7 @@ var questions = (function () {
 
     return {
         renderNext: renderNext,
-        toggleClickable : toggleClickable,
+        toggleClickable: toggleClickable,
         renderFailure: renderFailure,
         renderSuccess: renderSuccess,
         validateAnswer: validateAnswer
