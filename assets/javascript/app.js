@@ -14,7 +14,7 @@
 // [*] feature - start over
 // [*] feature - dynamic questions
 // * markdown document
-// * UI background etc
+// [*] UI background etc
 
     eventRegistry: function () {
       this.$clickable.on("click", questions.validateAnswer);

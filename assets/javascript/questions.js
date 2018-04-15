@@ -127,7 +127,7 @@ var questions = (function () {
 
         $choice3.empty();
         $choice4.empty();
-        clock.stopClock();
+        // clock.stopClock();
         $time.empty();
         isGameOver = true;
         gameStarted = false;
