@@ -5,6 +5,7 @@ var clock = (function () {
     var isClockRunning = false;
 
     var reset = function(){
+        pauseClock();
         $timeComponent.text(10);
         isClockRunning = false;
     };

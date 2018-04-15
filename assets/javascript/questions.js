@@ -93,17 +93,19 @@ var questions = (function () {
         currentQstnAnswrd = false;
         gameStarted = true;
         $correctAnswerPlace.empty();
+        $question.attr("style", "");
+
         if (questionIndex < questions.length) {
             clearPreviousAns();
             toggleClickable();
             var currentQuestion = questions[questionIndex];
-            $choice1.text(currentQuestion.choice1);
-            $choice2.text(currentQuestion.choice2);
-            $choice3.text(currentQuestion.choice3);
-            $choice4.text(currentQuestion.choice4);
-            $timeText.text("Time Remaining: ");
-            $timeUnits.text("Seconds");
-            $question.attr("style", "").html(currentQuestion.question);
+            $choice1.html(currentQuestion.choice1);
+            $choice2.html(currentQuestion.choice2);
+            $choice3.html(currentQuestion.choice3);
+            $choice4.html(currentQuestion.choice4);
+            $timeText.html("Time Remaining: ");
+            $timeUnits.html("Seconds");
+            $question.html(currentQuestion.question);
             currentCorrectAnswer = currentQuestion.correctAnswer;
             clock.reset();
             clock.startClock();
@@ -116,7 +118,7 @@ var questions = (function () {
 
     var gameOver = function () {
         clearPreviousAns();
-        $question.attr("style", "").text("Game Over!");
+        $question.html("Game Over!");
         $choice1.text("Correct Answers : " + wins);
         $choice2.text("Wrong Answers : " + losses);
         $timeUnits.text("");
@@ -151,7 +153,7 @@ var questions = (function () {
         });
     }
 
-    var renderSuccess = function ($answer) {
+    var renderSuccess = function () {
         if (!isGameOver) {
             wins++;
 
@@ -237,7 +239,7 @@ var questions = (function () {
             clock.pauseClock();
             toggleClickable();
             if ($answerChosen.text() === currentCorrectAnswer) {
-                renderSuccess($answerChosen);
+                renderSuccess();
                 // clock.pauseClock();
             } else {
                 renderFailure(false);
@@ -246,7 +248,7 @@ var questions = (function () {
             setTimeout(renderNext, 5000);
         }
         else {
-
+            //ignore click before and after the game.. also between questions
         }
     }
 
