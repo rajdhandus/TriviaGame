@@ -1,6 +1,7 @@
 # TriviaGame
 TriviaGame
 
+https://rajdhandus.github.io/TriviaGame/
 
 This is a trivia game project. The questions are dynamically served from https://opentdb.com. You get 10 seconds to answer the questions. If you are dont answer in 10 seconds, the app will time you out and move on to the next question.
 
