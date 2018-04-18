@@ -186,7 +186,7 @@ var questions = (function () {
         if (!isGameOver) {
             if (timeOut) {
                 // $correctAnswerPlace.html("<h1 style=\"color:red;\">Time Up.....</h1>");
-
+                currentQstnAnswrd = true;
                 $.ajax({
                     url: "https://api.giphy.com/v1/gifs/search?q=time+up&api_key=Na04YVp5uWKzlI9xdisIrOKM3hKzEPoN&limit=10",
                     method: "GET"
